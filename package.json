@@ -1,0 +1,38 @@
+{
+  "name": "kerplunk-blog-hexa",
+  "displayName": "Hexa Blog Theme",
+  "description": "Hexa Blog Theme",
+  "version": "0.0.1",
+  "kerplunk": {
+    "recommended": [
+      "kerplunk-blog-social-links"
+    ],
+    "dependencies": [
+      "kerplunk-blog"
+    ]
+  },
+  "keywords": [
+    "kerplunk-plugin",
+    "kp:Blogging"
+  ],
+  "engines": {
+    "node": ">=0.10"
+  },
+  "main": "./lib/hexa.js",
+  "dependencies": {
+    "lodash": "^3.7.0",
+    "moment": "^2.10.3",
+    "react": "^0.13.2",
+    "react-markdown": "^1.0.3"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.9.1",
+    "glut": "0.0.1",
+    "glut-coffee-amdify": "0.0.0",
+    "gulp": "^3.8.8",
+    "gulp-coffee": "^2.3.1"
+  },
+  "scripts": {
+    "prepublish": "rm -rf ./lib ./public && gulp"
+  }
+}
