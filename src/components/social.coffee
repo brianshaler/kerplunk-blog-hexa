@@ -1,36 +1,31 @@
 _ = require 'lodash'
 React = require 'react'
 
-{
-  a
-  div
-  li
-  span
-  ul
-} = React.DOM
-
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
+  shouldComponentUpdate: (nextProps, nextState) ->
+    nextProps.socialLinks != @props.socialLinks
+
   render: ->
-    console.log 'socialLinks', @props.globals.public.blog.socialLinks
-    socialLinks = @props.globals.public.blog.socialLinks
     # Instagram: 'http://instagram.com/brianshaler'
     # Twitter: 'http://twitter.com/brianshaler'
+    console.log 'socialLinks', @props.socialLinks
 
-    div
+    DOM.div
       className: 'social-links'
     ,
-      ul
+      DOM.ul
         id: 'menu-social-links'
         className: 'menu'
-      , _.map socialLinks, (socialLink, index) =>
-        li
+      , _.map @props.socialLinks, (socialLink, index) =>
+        DOM.li
           key: "social-link-#{index}"
           className: 'menu-item menu-item-type-custom menu-item-object-custom'
         ,
-          a
+          DOM.a
             href: socialLink
           ,
-            span
+            DOM.span
               className: 'screen-reader-text'
             , index

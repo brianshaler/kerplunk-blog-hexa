@@ -4,22 +4,14 @@ React = require 'react'
 Panel = require './panel'
 ScreenReader = require './screenreader'
 
+Header = require './header'
+Footer = require './footer'
 Menu = require './menu'
 Search = require './search'
 Social = require './social'
 Widgets = require './widgets'
 
-{
-  a
-  div
-  footer
-  h1
-  h2
-  header
-  link
-  nav
-  span
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   getInitialState: ->
@@ -31,87 +23,28 @@ module.exports = React.createFactory React.createClass
     else
       @props.blogSettings.baseUrl + relPath
 
-  button: (name, display) ->
-    div
-      id: "#{name}-toggle"
-      className: 'toggle'
-      title: display
-      onClick: =>
-        @setState
-          navShow: if @state.navShow == name then '' else name
-    ,
-      span
-        className: 'screen-reader-text'
-      , display
-
-  header: ->
-    header
-      id: 'masthead'
-      className: 'site-header'
-      role: 'banner'
-    ,
-      div
-        className: 'site-header-wrapper'
-      ,
-        div
-          className: 'site-branding'
-        ,
-          h1
-            className: 'site-title'
-          ,
-            a
-              href: @props.blogSettings.baseUrl
-              rel: 'home'
-            , @props.blogSettings.title
-          h2
-            className: 'site-description'
-          , @props.blogSettings.tagline
-        div
-          className: 'toggles'
-        ,
-          @button 'menu', 'Menu'
-          @button 'sidebar', 'Widgets'
-          @button 'social-links', 'Social Links'
-          @button 'search', 'Search'
-
-  footer: ->
-    footer
-      id: 'colophon'
-      className: 'site-footer'
-      role: 'contentinfo'
-    ,
-      div
-        className: 'site-info'
-      ,
-        a
-          href: '#'
-        , 'Footer link'
-        span
-          className: 'sep'
-        , ' | '
-        a
-          href: '#'
-        , 'Based on Hexa Theme by WordPress.com'
-
-  dont: (e) ->
-    e.preventDefault()
+  toggleNav: (name) ->
+    @setState
+      navShow: if @state.navShow == name then '' else name
 
   render: ->
-    div
+    ContentComponent = @props.getComponent @props.contentComponent
+
+    DOM.div
       className: 'fixed'
     ,
-      link
+      DOM.link
         rel: 'stylesheet'
         href: '/plugins/kerplunk-blog-hexa/css/style.css'
         media: 'all'
-      link
+      DOM.link
         rel: 'stylesheet'
         href: '/plugins/kerplunk-blog-hexa/css/genericons/genericons.css'
         media: 'all'
-      div
+      DOM.div
         className: 'home blog mp6 highlander-enabled highlander-light'
       ,
-        div
+        DOM.div
           className: 'hfeed site'
           id: 'page'
         ,
@@ -122,7 +55,8 @@ module.exports = React.createFactory React.createClass
           Panel
             name: 'social-links'
             show: @state.navShow == 'social-links'
-            contents: Social _.extend {}, @props
+            contents: Social
+              socialLinks: @props.globals.public.blog.socialLinks
           Panel
             name: 'sidebar'
             show: @state.navShow == 'sidebar'
@@ -131,16 +65,18 @@ module.exports = React.createFactory React.createClass
             name: 'search'
             show: @state.navShow == 'search'
             contents: Search()
-          @header()
-          div
+          Header
+            blogSettings: @props.blogSettings
+            toggleNav: @toggleNav
+            pushState: @props.pushState
+          DOM.div
             id: 'content'
             className: 'site-content'
           ,
-            @props.getComponent(@props.contentComponent) _.extend {key: @props.currentUrl},
-              @props
-              {buildUrl: @buildUrl}
-
-          @footer()
+            ContentComponent _.extend {}, @props,
+              key: @props.currentUrl
+              buildUrl: @buildUrl
+          Footer()
 
 module.exports.scripts = [
   '/plugins/kerplunk-blog/browserify/react-markdown.js'

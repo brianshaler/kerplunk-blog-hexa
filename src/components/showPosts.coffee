@@ -4,17 +4,11 @@ React = require 'react'
 
 Post = require './showPost'
 
-{
-  a
-  div
-  h3
-  p
-  span
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   render: ->
-    div null,
+    DOM.div null,
       _.map @props.posts, (post) =>
         Post _.extend {}, @props,
           key: post._id

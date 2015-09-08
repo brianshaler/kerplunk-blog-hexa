@@ -1,20 +1,16 @@
 React = require 'react'
 
-{
-  aside
-  div
-  h1
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   render: ->
-    div
+    DOM.div
       className: 'widget-area'
     ,
-      aside
+      DOM.aside
         className: 'widget'
       ,
-        h1
+        DOM.h1
           className: 'widget-title'
         , @props.name
         @props.contents

@@ -3,28 +3,22 @@ React = require 'react'
 
 Widget = require './widget'
 
-{
-  div
-  form
-  input
-  label
-  span
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   render: ->
     widgets = [
       {
         name: 'Comments'
-        content: div null, 'hi'
+        content: DOM.div null, 'hi'
       }
       {
         name: 'Tags'
-        content: div null, 'hello'
+        content: DOM.div null, 'hello'
       }
     ]
 
-    div
+    DOM.div
       className: 'widget-areas'
     , _.map widgets, (widget) ->
       Widget

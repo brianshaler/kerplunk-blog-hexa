@@ -4,23 +4,13 @@ React = require 'react'
 ReactMarkdownName = 'react-markdown'
 
 ScreenReader = require './screenreader'
+PostHeader = require './postHeader'
+PostMeta = require './postMeta'
 
 ReactMarkdownClass = ReactMarkdown ? require ReactMarkdownName
 ReactMarkdownComponent = React.createFactory ReactMarkdownClass
 
-{
-  a
-  article
-  div
-  footer
-  h1
-  h3
-  header
-  nav
-  p
-  span
-  time
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   getInitialState: ->
@@ -46,147 +36,94 @@ module.exports = React.createFactory React.createClass
     @setState
       truncate: false
 
-  header: ->
-    typeLink = if @props.post.type
-      a
-        className: 'entry-format'
-        href: @props.buildUrl "/posts/type/#{@props.post.type}"
-        title: "All #{@props.post.type} posts"
-      ,
-        ScreenReader null, @props.post.type
-    else
-      span
-        className: 'entry-format'
-      , ''
-
-    header
-      className: 'entry-header'
-    ,
-      typeLink
-      h1
-        className: 'hentry-title'
-      ,
-        a
-          href: @props.post.permalink
-          title: @props.post.title
-          rel: 'bookmark'
-        , @props.post.title
-
-  content: ->
-    div
-      className: 'entry-content'
-    ,
-      ReactMarkdownComponent
-        source: if @state.truncate == true
-          @state.truncatedBody
-        else
-          @state.body
-        escapeHtml: true
-      if @state.truncate
-        p
-          className: 'entry-meta continue-reading'
-        ,
-          a
-            href: @props.post.permalink
-            onClick: @onExpand
-          , 'Continue reading'
-      else
-        null
-      @meta()
-
-      # div
-      #   className: 'page-links'
-      #   style:
-      #     display: 'none'
-      # ,
-      #   span
-      #     className: 'active-link'
-      #   , '<- previous'
-      #   span
-      #     className: 'active-link'
-      #   , 'next ->'
-
-  meta: ->
-    createdAt = moment.utc @props.post.createdAt
-      .format 'llll'
-    footer
-      className: 'entry-meta'
-    ,
-      span
-        className: 'post-date'
-      ,
-        a
-          href: @props.post.permalink
-          title: createdAt
-          rel: 'bookmark'
-        ,
-          time
-            className: 'entry-date'
-            dateTime: createdAt
-          ,
-            createdAt
-      span
-        className: 'byline'
-      ,
-        span
-          className: 'author vcard'
-        ,
-          a
-            className: 'url fn n'
-            href: @props.buildUrl "/posts/author/#{@props.post.author}"
-            title: "View all posts by #{@props.post.author}"
-            rel: 'author'
-          , @props.post.author
-      if @props.post.tags?.length > 0
-        span
-          className: 'tags-links'
-        , ''
-      else
-        null
-      if @props.isUser
-        span
-          className: 'edit-link'
-        ,
-          a
-            href: "/admin/blog/edit/#{@props.post._id}"
-          , 'Edit'
-      else
-        null
-
   render: ->
+    CustomComponent = if @props.post.attributes?.componentPath?.length > 0
+      console.log 'get component', @props.post.attributes.componentPath
+      @props.getComponent @props.post.attributes.componentPath
+    else
+      false
     postClass = if /<img/.test @props.post.body
       'format-image'
     else
       'format-post'
 
-    div null,
-      article
+    DOM.div null,
+      DOM.article
         id: "post-#{@props.post._id}"
         className: "hentry #{postClass}"
       ,
-        @header()
-        @content()
+        PostHeader
+          postTypeUrl: @props.buildUrl "/posts/type/#{@props.postType}"
+          postType: @props.post.type
+          permalink: @props.post.permalink
+          title: @props.post.title
+          pushState: @props.pushState
+
+        # CONTENT
+        DOM.div
+          className: 'entry-content'
+        ,
+          if CustomComponent == false
+            ReactMarkdownComponent
+              source: if @state.truncate == true
+                @state.truncatedBody
+              else
+                @state.body
+              escapeHtml: true
+          else
+            CustomComponent _.extend {}, @props, @props.post.attributes?.data
+          if CustomComponent == false and @state.truncate
+            DOM.p
+              className: 'entry-meta continue-reading'
+            ,
+              DOM.a
+                href: @props.post.permalink
+                onClick: @onExpand
+              , 'Continue reading'
+          else
+            null
+
+          PostMeta
+            author: @props.post.author
+            authorUrl: @props.buildUrl "/posts/author/#{@props.post.author}"
+            createdAt: moment.utc(@props.post.createdAt).format('llll')
+            isUser: @props.isUser
+            permalink: @props.permalink
+            postId: @props.post._id
+            tags: @props.post.tags
+
+          # DOM.div
+          #   className: 'page-links'
+          #   style:
+          #     display: 'none'
+          # ,
+          #   DOM.span
+          #     className: 'active-link'
+          #   , '<- previous'
+          #   DOM.span
+          #     className: 'active-link'
+          #   , 'next ->'
       if @props.previousPost or @props.nextPost
-        nav
+        DOM.nav
           className: 'navigation post-navigation'
           role: 'navigation'
         ,
-          h1
+          DOM.h1
             className: 'screen-reader-text'
           , 'Post navigation'
-          div
+          DOM.div
             className: 'nav-links'
           ,
-            div
+            DOM.div
               className: 'nav-previous'
             ,
-              a
+              DOM.a
                 href: @props.previousPost
               , ScreenReader null, 'Previous post'
-            div
+            DOM.div
               className: 'nav-next'
             ,
-              a
+              DOM.a
                 href: @props.nextPost
               , ScreenReader null, 'Next post'
       else

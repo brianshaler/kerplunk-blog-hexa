@@ -1,6 +1,6 @@
 React = require 'react'
 
-{div} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   getDefaultProps: ->
@@ -56,7 +56,7 @@ module.exports = React.createFactory React.createClass
     , 1
 
   render: ->
-    div
+    DOM.div
       id: "#{@props.name}-toggle-nav"
       className: 'panel'
       style:
@@ -66,6 +66,6 @@ module.exports = React.createFactory React.createClass
         margin: (0 if @state.animating)
         padding: (0 if @state.animating)
     ,
-      div
+      DOM.div
         ref: 'contents'
       , @props.contents

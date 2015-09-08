@@ -1,31 +1,25 @@
 React = require 'react'
 
-{
-  a
-  div
-  li
-  nav
-  ul
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   render: ->
-    nav
+    DOM.nav
       id: 'site-navigation'
       className: 'main-navigation'
       role: 'navigation'
     ,
-      a
+      DOM.a
         className: 'skip-link screen-reader-text'
         href: '#content'
       , 'Skip to content'
-      div
+      DOM.div
         className: 'menu'
       ,
-        ul null,
-          li
+        DOM.ul null,
+          DOM.li
             className: 'current_page_item'
           ,
-            a
+            DOM.a
               href: @props.blogSettings.baseUrl
             , 'Home'

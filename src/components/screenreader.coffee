@@ -1,11 +1,9 @@
 React = require 'react'
 
-{
-  span
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   render: ->
-    span
+    DOM.span
       className: 'screen-reader-text'
     , @props.children

@@ -9,7 +9,8 @@
     ],
     "dependencies": [
       "kerplunk-blog"
-    ]
+    ],
+    "postInstallComponent": "kerplunk-blog-hexa:afterInstall"
   },
   "keywords": [
     "kerplunk-plugin",
@@ -26,11 +27,16 @@
     "react-markdown": "^1.0.3"
   },
   "devDependencies": {
+    "browserify": "^10.2.6",
     "coffee-script": "^1.9.1",
     "glut": "0.0.1",
     "glut-coffee-amdify": "0.0.0",
     "gulp": "^3.8.8",
-    "gulp-coffee": "^2.3.1"
+    "gulp-coffee": "^2.3.1",
+    "gulp-header": "^1.2.2",
+    "gulp-footer": "^1.0.5",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
     "prepublish": "rm -rf ./lib ./public && gulp"

@@ -1,26 +1,20 @@
 React = require 'react'
 
-{
-  div
-  form
-  input
-  label
-  span
-} = React.DOM
+{DOM} = React
 
 module.exports = React.createFactory React.createClass
   render: ->
-    div
+    DOM.div
       className: 'search-wrapper'
     ,
-      form
+      DOM.form
         onSubmit: @dont
       ,
-        label null,
-          span
+        DOM.label null,
+          DOM.span
             className: 'screen-reader-text'
           , 'Search for:'
-          input
+          DOM.input
             type: 'search'
             className: 'search-field'
             placeholder: 'Search ...'
