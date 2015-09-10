@@ -45,5 +45,6 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/brianshaler/kerplunk-blog-hexa.git"
-  }
+  },
+  "license": "MIT"
 }
