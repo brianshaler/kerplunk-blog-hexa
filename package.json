@@ -2,7 +2,7 @@
   "name": "kerplunk-blog-hexa",
   "displayName": "Hexa Blog Theme",
   "description": "Hexa Blog Theme",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "kerplunk": {
     "recommended": [
       "kerplunk-blog-social-links"
