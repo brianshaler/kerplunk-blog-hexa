@@ -30,18 +30,37 @@ module.exports = React.createFactory React.createClass
     truncate: truncatedBody.length != body.length
     truncatedBody: truncatedBody
     body: body
+    postComponents: @postComponents body
 
   onExpand: (e) ->
     e.preventDefault()
     @setState
       truncate: false
 
+  postComponents: (body) ->
+    lines = _.map body.split('\n'), (line) ->
+      return line unless /^\{.+\}$/.test line
+      try
+        obj = JSON.parse line
+      catch err
+        'nothing'
+      return line unless obj?.componentPath?.length > 0
+
+      path: obj.componentPath
+      data: obj.data
+
+    components = []
+    for line in lines
+      if typeof line is 'string'
+        if components.length > 0 and typeof components[components.length-1] is 'string'
+          components[components.length-1] += "#{line}\n"
+        else
+          components.push "#{line}\n"
+      else
+        components.push line
+    components
+
   render: ->
-    CustomComponent = if @props.post.attributes?.componentPath?.length > 0
-      console.log 'get component', @props.post.attributes.componentPath
-      @props.getComponent @props.post.attributes.componentPath
-    else
-      false
     postClass = if /<img/.test @props.post.body
       'format-image'
     else
@@ -63,16 +82,25 @@ module.exports = React.createFactory React.createClass
         DOM.div
           className: 'entry-content'
         ,
-          if CustomComponent == false
-            ReactMarkdownComponent
-              source: if @state.truncate == true
-                @state.truncatedBody
-              else
-                @state.body
-              escapeHtml: true
-          else
-            CustomComponent _.extend {}, @props, @props.post.attributes?.data
-          if CustomComponent == false and @state.truncate
+          _.map @state.postComponents, (component, index) =>
+            if typeof component is 'string'
+              ReactMarkdownComponent
+                key: index
+                source: if @state.postComponents.length == 1 and typeof @state.postComponents[0] is 'string' and @state.truncate
+                  @state.truncatedBody
+                else
+                  component
+                escapeHtml: true
+            else
+              Component = @props.getComponent component.path
+              DOM.div
+                key: index
+                className: 'clear clearfix'
+              ,
+                Component _.extend {}, @props, component.data,
+                  key: index
+
+          if @state.postComponents.length == 1 and typeof @state.postComponents[0] is 'string' and @state.truncate
             DOM.p
               className: 'entry-meta continue-reading'
             ,
