@@ -77,10 +77,3 @@ module.exports = React.createFactory React.createClass
               key: @props.currentUrl
               buildUrl: @buildUrl
           Footer()
-
-module.exports.scripts = [
-  '/plugins/kerplunk-blog/browserify/react-markdown.js'
-]
-
-# ugh.
-module.exports
