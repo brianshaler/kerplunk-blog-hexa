@@ -24,10 +24,8 @@ module.exports = React.createFactory React.createClass
       ,
         PostHeader
           postTypeUrl: @props.buildUrl "/posts/type/#{@props.postType}"
-          postType: @props.post.attributes?.type
-          permalink: @props.post.permalink
-          title: @props.post.title
           pushState: @props.pushState
+          post: @props.post
 
         # CONTENT
         DOM.div
